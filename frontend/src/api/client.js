@@ -1,0 +1,40 @@
+const TOKEN_KEY = 'leave_app_token'
+
+export function getToken() {
+  return localStorage.getItem(TOKEN_KEY)
+}
+
+export function setToken(token) {
+  if (token) localStorage.setItem(TOKEN_KEY, token)
+  else localStorage.removeItem(TOKEN_KEY)
+}
+
+/**
+ * 1 fetch wrapper duy nhat: tu gan header Authorization neu da dang nhap, va
+ * nem loi voi dung message tu backend (GlobalExceptionHandler tra ve {error: "..."})
+ * thay vi de caller tu parse response o moi noi goi API.
+ */
+export async function apiFetch(path, options = {}) {
+  const token = getToken()
+  const headers = {
+    'Content-Type': 'application/json',
+    ...(token ? { Authorization: `Bearer ${token}` } : {}),
+    ...options.headers,
+  }
+
+  const response = await fetch(path, { ...options, headers })
+
+  if (!response.ok) {
+    let message = `Request failed (${response.status})`
+    try {
+      const body = await response.json()
+      message = body.error || message
+    } catch {
+      // response khong phai JSON (vi du 401 tu container) - giu message mac dinh
+    }
+    throw new Error(message)
+  }
+
+  if (response.status === 204) return null
+  return response.json()
+}

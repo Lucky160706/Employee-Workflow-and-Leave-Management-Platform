@@ -23,3 +23,6 @@ Thumbs.db
 
 ### DB file (H2 local dev) ###
 backend/data/
+
+### Playwright MCP test artifacts ###
+.playwright-mcp/
