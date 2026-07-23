@@ -1,0 +1,20 @@
+CREATE TABLE IF NOT EXISTS users (
+    id BIGINT AUTO_INCREMENT PRIMARY KEY,
+    email VARCHAR(255) NOT NULL UNIQUE,
+    password_hash VARCHAR(255) NOT NULL,
+    full_name VARCHAR(255) NOT NULL,
+    role VARCHAR(20) NOT NULL,
+    manager_id BIGINT NULL REFERENCES users(id)
+);
+
+CREATE TABLE IF NOT EXISTS leave_requests (
+    id BIGINT AUTO_INCREMENT PRIMARY KEY,
+    requester_id BIGINT NOT NULL REFERENCES users(id),
+    start_date DATE NOT NULL,
+    end_date DATE NOT NULL,
+    reason VARCHAR(500) NOT NULL,
+    status VARCHAR(20) NOT NULL DEFAULT 'PENDING',
+    decided_by BIGINT NULL REFERENCES users(id),
+    decided_at TIMESTAMP NULL,
+    created_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP
+);
