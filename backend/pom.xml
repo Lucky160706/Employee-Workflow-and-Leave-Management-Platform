@@ -93,6 +93,13 @@
       <artifactId>spring-security-test</artifactId>
       <scope>test</scope>
     </dependency>
+    <!-- JDK's built-in HttpURLConnection khong ho tro PATCH method - TestRestTemplate
+         tu chuyen sang dung Apache HttpClient khi thay no co tren classpath. -->
+    <dependency>
+      <groupId>org.apache.httpcomponents.client5</groupId>
+      <artifactId>httpclient5</artifactId>
+      <scope>test</scope>
+    </dependency>
   </dependencies>
 
   <build>
@@ -101,6 +108,21 @@
       <plugin>
         <groupId>org.springframework.boot</groupId>
         <artifactId>spring-boot-maven-plugin</artifactId>
+      </plugin>
+      <!-- Failsafe = phien ban "chay o phase integration-test/verify" cua Surefire.
+           Quy uoc ten *IT chi duoc plugin nay nhan dien (Surefire mac dinh bo qua *IT),
+           tach unit test ("mvn test") khoi integration test ("mvn verify"). -->
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-failsafe-plugin</artifactId>
+        <executions>
+          <execution>
+            <goals>
+              <goal>integration-test</goal>
+              <goal>verify</goal>
+            </goals>
+          </execution>
+        </executions>
       </plugin>
     </plugins>
   </build>

@@ -1,0 +1,11 @@
+# Profile nay chi active khi chay trong Docker (SPRING_PROFILES_ACTIVE=docker) -
+# doi tu H2 sang Postgres, gan voi moi truong production hon Stage 2/3.
+spring:
+  datasource:
+    url: jdbc:postgresql://${DB_HOST:db}:5432/${DB_NAME:leavedb}
+    driver-class-name: org.postgresql.Driver
+    username: ${DB_USER:leaveapp}
+    password: ${DB_PASSWORD:leaveapp}
+  h2:
+    console:
+      enabled: false

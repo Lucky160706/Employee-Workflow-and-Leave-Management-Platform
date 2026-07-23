@@ -3,6 +3,7 @@ package com.minise.leave.service;
 import com.minise.leave.domain.LeaveRequest;
 import com.minise.leave.domain.LeaveStatus;
 import com.minise.leave.domain.User;
+import com.minise.leave.integration.NotificationClient;
 import com.minise.leave.repository.LeaveRequestRepository;
 import com.minise.leave.repository.UserRepository;
 import com.minise.leave.web.dto.LeaveRequestCreateDto;
@@ -24,10 +25,16 @@ public class LeaveRequestService {
 
     private final LeaveRequestRepository leaveRequestRepository;
     private final UserRepository userRepository;
+    private final NotificationClient notificationClient;
 
-    public LeaveRequestService(LeaveRequestRepository leaveRequestRepository, UserRepository userRepository) {
+    public LeaveRequestService(
+            LeaveRequestRepository leaveRequestRepository,
+            UserRepository userRepository,
+            NotificationClient notificationClient
+    ) {
         this.leaveRequestRepository = leaveRequestRepository;
         this.userRepository = userRepository;
+        this.notificationClient = notificationClient;
     }
 
     @Transactional
@@ -95,6 +102,7 @@ public class LeaveRequestService {
         }
 
         request.decide(decision, manager);
+        notificationClient.notifyDecision(request);
         return LeaveRequestViewDto.from(request);
     }
 

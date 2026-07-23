@@ -1,0 +1,43 @@
+services:
+  db:
+    image: postgres:16-alpine
+    environment:
+      POSTGRES_DB: leavedb
+      POSTGRES_USER: ${DB_USER:-leaveapp}
+      POSTGRES_PASSWORD: ${DB_PASSWORD:-leaveapp}
+    volumes:
+      - db-data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U ${DB_USER:-leaveapp}"]
+      interval: 5s
+      timeout: 5s
+      retries: 10
+
+  backend:
+    build:
+      context: .
+      dockerfile: docker/backend.Dockerfile
+    environment:
+      SPRING_PROFILES_ACTIVE: docker
+      DB_HOST: db
+      DB_NAME: leavedb
+      DB_USER: ${DB_USER:-leaveapp}
+      DB_PASSWORD: ${DB_PASSWORD:-leaveapp}
+      JWT_SECRET: ${JWT_SECRET:-change-me-in-a-real-deployment-0123456789}
+    depends_on:
+      db:
+        condition: service_healthy
+    ports:
+      - "8080:8080"
+
+  frontend:
+    build:
+      context: .
+      dockerfile: docker/frontend.Dockerfile
+    depends_on:
+      - backend
+    ports:
+      - "8081:80"
+
+volumes:
+  db-data:
