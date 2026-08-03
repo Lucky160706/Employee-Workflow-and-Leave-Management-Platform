@@ -1,6 +1,6 @@
-# Leave Approval System — Mini SE Project
+# Leave Approval System - Mini SE Project
 
-Một hệ thống duyệt nghỉ phép nội bộ (**Leave Approval System**), xây theo đúng cách một team thật sẽ làm — nhỏ gọn, nhưng đủ chuẩn để cắm vào một hệ thống doanh nghiệp lớn hơn. Đây là project mini dành cho sinh viên → junior dev, đi kèm series 4 video giải thích tư duy đằng sau từng quyết định kỹ thuật.
+Một hệ thống duyệt nghỉ phép nội bộ (**Leave Approval System**), xây theo đúng cách một team thật sẽ làm - nhỏ gọn, nhưng đủ chuẩn để cắm vào một hệ thống doanh nghiệp lớn hơn. Đây là project mini dành cho sinh viên → junior dev, đi kèm series 4 video giải thích tư duy đằng sau từng quyết định kỹ thuật.
 
 ## Bài toán
 
@@ -8,7 +8,7 @@ Một hệ thống duyệt nghỉ phép nội bộ (**Leave Approval System**), 
 - **Manager** duyệt/từ chối đơn của những người báo cáo trực tiếp cho mình.
 - **HR** xem toàn bộ đơn trong công ty.
 
-Giống hệt việc học sinh xin nghỉ học và giáo viên chủ nhiệm duyệt — chỉ khác là có thêm vai trò, quyền hạn, và phải chạy được trong môi trường doanh nghiệp thật.
+Giống hệt việc học sinh xin nghỉ học và giáo viên chủ nhiệm duyệt - chỉ khác là có thêm vai trò, quyền hạn, và phải chạy được trong môi trường doanh nghiệp thật.
 
 ## 4 giai đoạn (khớp 4 video)
 
@@ -22,32 +22,32 @@ Giống hệt việc học sinh xin nghỉ học và giáo viên chủ nhiệm d
 ## Công nghệ sử dụng
 
 Danh sách dưới đây không có gì lạ, và đó là chủ ý. Toàn bộ đều là thứ một team Java đi làm
-gặp trong tuần đầu tiên — học xong project này bạn không phải quên đi cái gì để đi làm.
+gặp trong tuần đầu tiên - học xong project này bạn không phải quên đi cái gì để đi làm.
 
-**Backend — Java 21, Spring Boot 3.5.16, đóng gói thành một JAR duy nhất.**
+**Backend - Java 21, Spring Boot 3.5.16, đóng gói thành một JAR duy nhất.**
 
 | Thư viện | Có mặt để làm gì |
 |---|---|
-| `spring-boot-starter-web` | Spring MVC + Tomcat nhúng — dựng REST API |
+| `spring-boot-starter-web` | Spring MVC + Tomcat nhúng - dựng REST API |
 | `spring-boot-starter-security` | Chặn request theo quyền, băm mật khẩu bằng BCrypt |
 | `spring-boot-starter-data-jpa` | Hibernate, ánh xạ 2 bảng thành entity |
 | `spring-boot-starter-validation` | Chặn dữ liệu sai ngay ở biên bằng `@Valid`, không để lọt xuống service |
 | `spring-boot-starter-actuator` | `/actuator/health` cho load balancer và Kubernetes |
 | `jjwt` 0.12.7 | Tự ký và verify JWT |
-| `springdoc-openapi` 2.8.17 | Sinh Swagger UI từ chính code — phiên bản 2.8.x bắt buộc đi cùng Boot 3.5 |
+| `springdoc-openapi` 2.8.17 | Sinh Swagger UI từ chính code - phiên bản 2.8.x bắt buộc đi cùng Boot 3.5 |
 | H2 | Database in-memory cho dev, chạy được ngay không cần cài gì |
 | PostgreSQL 16 | Database thật khi chạy Docker, dữ liệu nằm trong volume |
 
-**Frontend — React 19 dựng bằng Vite 8.** Chỉ có ba dependency: `react`, `react-dom` và
+**Frontend - React 19 dựng bằng Vite 8.** Chỉ có ba dependency: `react`, `react-dom` và
 `react-router-dom` để điều hướng theo role sau khi đăng nhập. Lint bằng `oxlint` (viết bằng
 Rust, nhanh hơn ESLint đáng kể trên project nhỏ vì gần như không có thời gian khởi động).
 
-**Test — JUnit 5, Mockito và AssertJ**, tất cả nằm sẵn trong `spring-boot-starter-test`.
+**Test - JUnit 5, Mockito và AssertJ**, tất cả nằm sẵn trong `spring-boot-starter-test`.
 Maven Failsafe tách integration test (`*IT`, chạy ở `verify`) khỏi unit test (chạy ở `test`).
 Có thêm Apache HttpClient 5 trong scope test vì một lý do rất cụ thể: `HttpURLConnection` của
 JDK không hỗ trợ method `PATCH`, mà endpoint duyệt đơn lại dùng đúng method đó.
 
-**Hạ tầng — Docker multi-stage** (`maven:3.9-temurin-21` để build, `temurin-21-jre-alpine`
+**Hạ tầng - Docker multi-stage** (`maven:3.9-temurin-21` để build, `temurin-21-jre-alpine`
 để chạy; image cuối chạy bằng user không phải root), **Docker Compose** ba service có
 healthcheck xếp thứ tự khởi động, **nginx** phục vụ file tĩnh và proxy `/api`, và
 **GitHub Actions** chạy hai job song song cho backend và frontend.
@@ -62,7 +62,7 @@ Phần này đáng đọc hơn phần trên. Mỗi dòng đều có ghi chú `po
 | Keycloak / OAuth2 | Tự ký JWT | Khi có từ 2 hệ thống trở lên cần chung một nơi đăng nhập |
 | Redux / Zustand | `useState` và `useEffect` | Khi state phải chia sẻ giữa các trang không liên quan |
 | MapStruct | Viết tay 4 DTO | Khi số DTO lên hàng chục |
-| Lombok | Java `record` | Gần như không cần — `record` đã giải quyết phần lớn lý do người ta dùng Lombok |
+| Lombok | Java `record` | Gần như không cần - `record` đã giải quyết phần lớn lý do người ta dùng Lombok |
 | Microservices | Một JAR duy nhất | Khi nhiều team làm độc lập, hoặc cần scale riêng từng phần |
 
 Khác biệt giữa "chưa biết nên không dùng" và "biết rõ nên chưa dùng" nằm ở cột cuối cùng.
@@ -71,23 +71,23 @@ Khác biệt giữa "chưa biết nên không dùng" và "biết rõ nên chưa 
 
 | Cần gì | Phiên bản | Ghi chú |
 |---|---|---|
-| JDK | 21 | Không cần cài Maven — repo có sẵn Maven Wrapper (`./mvnw`) |
+| JDK | 21 | Không cần cài Maven - repo có sẵn Maven Wrapper (`./mvnw`) |
 | Node.js | ≥ 22.12 (hoặc ≥ 20.19) | Vite 8 yêu cầu; Node 20 đã hết hạn hỗ trợ từ 04/2026 |
 | Docker | bản mới | Chỉ cần cho Stage 4 |
 
 ## Cách chạy từng stage
 
-**Stage 2 — chỉ backend (không cần Docker):**
+**Stage 2 - chỉ backend (không cần Docker):**
 ```bash
 cd backend
 ./mvnw spring-boot:run     # Windows: mvnw.cmd spring-boot:run
 ```
 - API: `http://localhost:8080/api/v1/...`
-- Swagger UI (tài liệu API — cũng là "hợp đồng" để hệ thống khác tích hợp vào): `http://localhost:8080/swagger-ui.html`
+- Swagger UI (tài liệu API - cũng là "hợp đồng" để hệ thống khác tích hợp vào): `http://localhost:8080/swagger-ui.html`
 - Health check (để load balancer/k8s biết app còn sống): `http://localhost:8080/actuator/health`
 - Tài khoản demo (xem `backend/src/main/resources/data.sql`): `manager@co.com` / `employee1@co.com` / `hr@co.com`, mật khẩu `password123`
 
-**Stage 3 — full stack:**
+**Stage 3 - full stack:**
 ```bash
 # terminal 1
 cd backend && ./mvnw spring-boot:run
@@ -96,7 +96,7 @@ cd frontend && npm install && npm run dev
 ```
 Mở `http://localhost:5173`, đăng nhập bằng 1 trong 3 tài khoản demo ở trên.
 
-**Stage 4 — chạy toàn bộ qua Docker (giống môi trường thật hơn, dùng Postgres thay vì H2):**
+**Stage 4 - chạy toàn bộ qua Docker (giống môi trường thật hơn, dùng Postgres thay vì H2):**
 ```bash
 cp .env.example .env       # đổi giá trị thật nếu không phải chạy demo local
 docker compose up --build
@@ -116,42 +116,42 @@ cd frontend && npm run build  # frontend chưa có test tự động (xem "Tính
 Năm sơ đồ mô tả: hệ thống chạy ở đâu, một request đi qua những lớp nào, đơn nghỉ chuyển
 trạng thái ra sao, dữ liệu nằm ở đâu, và ai được làm gì.
 
-### 1. Kiến trúc runtime — hai chế độ chạy
+### 1. Kiến trúc runtime - hai chế độ chạy
 
 Cùng một mã nguồn, hai cách chạy. Khác nhau đúng hai chỗ: ai phục vụ file tĩnh và chuyển
 tiếp `/api`, và dùng H2 trong bộ nhớ hay Postgres thật.
 
 ```mermaid
 flowchart LR
-    subgraph DEV["Chế độ dev — npm run dev + mvnw spring-boot:run"]
+    subgraph DEV["Chế độ dev - npm run dev + mvnw spring-boot:run"]
         direction LR
         B1["Trình duyệt<br/>localhost:5173"]
         V["Vite dev server<br/>proxy /api sang :8080"]
         B1 --> V
     end
 
-    subgraph DOCKER["Chế độ Docker — docker compose up -d"]
+    subgraph DOCKER["Chế độ Docker - docker compose up -d"]
         direction LR
         B2["Trình duyệt<br/>localhost:8081"]
         N["nginx<br/>file tĩnh + proxy /api"]
         B2 --> N
     end
 
-    subgraph BE["Spring Boot — một JAR duy nhất, cổng 8080"]
+    subgraph BE["Spring Boot - một JAR duy nhất, cổng 8080"]
         direction TB
         F1["CorrelationIdFilter<br/>gắn X-Correlation-Id vào log"]
         F2["JwtAuthFilter<br/>đọc Bearer token mỗi request"]
         C["Controllers /api/v1/..."]
         S["LeaveRequestService<br/>toàn bộ luật nghiệp vụ"]
-        R["Repository — Spring Data JPA"]
+        R["Repository - Spring Data JPA"]
         F1 --> F2 --> C --> S --> R
     end
 
     OPS["/actuator/health · /swagger-ui.html<br/>không cần đăng nhập"]
     DBH[("H2 in-memory<br/>dev")]
     DBP[("Postgres 16<br/>docker, có volume")]
-    MAIL["NotificationClient<br/>mock — chỗ nối mail/queue thật"]
-    SSO["/integration/sso/validate<br/>mock — chỗ nối SSO/IdP thật"]
+    MAIL["NotificationClient<br/>mock - chỗ nối mail/queue thật"]
+    SSO["/integration/sso/validate<br/>mock - chỗ nối SSO/IdP thật"]
 
     V -->|"HTTP + Bearer JWT"| F1
     N -->|"HTTP + Bearer JWT"| F1
@@ -168,13 +168,13 @@ flowchart LR
 Nét đứt là hai điểm nối còn mock, chưa cắm vào hệ thống thật.
 
 **Vì sao cả hai chế độ đều proxy `/api`?** Để frontend luôn gọi đường dẫn tương đối
-`/api/v1/...` — trình duyệt thấy cùng một origin nên không phát sinh CORS, và backend không
+`/api/v1/...` - trình duyệt thấy cùng một origin nên không phát sinh CORS, và backend không
 phải cấu hình CORS chỉ để phục vụ môi trường dev.
 
-### 2. Luồng xác thực — đăng nhập rồi gọi API
+### 2. Luồng xác thực - đăng nhập rồi gọi API
 
 Server không lưu session. Mỗi request tự chứng minh danh tính bằng JWT trong header, nên
-bất kỳ instance backend nào cũng xử lý được — đây là điều kiện để scale ngang.
+bất kỳ instance backend nào cũng xử lý được - đây là điều kiện để scale ngang.
 
 ```mermaid
 sequenceDiagram
@@ -187,7 +187,7 @@ sequenceDiagram
 
     U->>FE: nhập email + mật khẩu
     FE->>API: POST /api/v1/auth/login
-    Note over JF: /auth/** là permitAll —<br/>chưa có token nên phải mở
+    Note over JF: /auth/** là permitAll -<br/>chưa có token nên phải mở
     API->>DB: tìm user theo email
     DB-->>API: user + password_hash (BCrypt)
     API-->>FE: { token, role, fullName }
@@ -205,7 +205,7 @@ sequenceDiagram
         Note over FE: xoá token hỏng,<br/>tự đưa về /login
     else Đã đăng nhập nhưng sai vai trò
         API-->>FE: 403 Forbidden
-        Note over FE: giữ nguyên phiên —<br/>đăng nhập lại cũng vô ích
+        Note over FE: giữ nguyên phiên -<br/>đăng nhập lại cũng vô ích
     end
 ```
 
@@ -215,14 +215,14 @@ ra: `401` = *chưa có danh tính hợp lệ* → frontend xoá token và đưa 
 
 ### 3. Vòng đời một đơn nghỉ phép
 
-Ba trạng thái, quyết định một chiều — đã duyệt hoặc đã từ chối thì không quay lại được.
+Ba trạng thái, quyết định một chiều - đã duyệt hoặc đã từ chối thì không quay lại được.
 
 ```mermaid
 stateDiagram-v2
     direction LR
-    [*] --> PENDING: Employee gửi đơn — POST /leave-requests
-    PENDING --> APPROVED: Quản lý trực tiếp duyệt — PATCH /{id}/decision
-    PENDING --> REJECTED: Quản lý trực tiếp từ chối — PATCH /{id}/decision
+    [*] --> PENDING: Employee gửi đơn - POST /leave-requests
+    PENDING --> APPROVED: Quản lý trực tiếp duyệt - PATCH /{id}/decision
+    PENDING --> REJECTED: Quản lý trực tiếp từ chối - PATCH /{id}/decision
     APPROVED --> [*]
     REJECTED --> [*]
 
@@ -238,7 +238,7 @@ Ba phép kiểm tra trên nằm ở `LeaveRequestService.decide()`, không nằm
 
 **Vì sao kiểm tra "cấp dưới trực tiếp" không đặt ở `@PreAuthorize`?** Annotation chỉ biết
 vai trò của người gọi, không biết dữ liệu của đơn cụ thể. Muốn biết đơn số 3 có phải của
-cấp dưới mình hay không thì phải đọc database — nên phép kiểm tra này thuộc tầng service.
+cấp dưới mình hay không thì phải đọc database - nên phép kiểm tra này thuộc tầng service.
 
 ### 4. Mô hình dữ liệu
 
@@ -272,11 +272,11 @@ erDiagram
 
 Đọc ký hiệu chân quạ ở đầu mỗi đường nối: `||` là bắt buộc đúng một, `|o` là không hoặc
 một, `o{` là không hoặc nhiều. Nên hai đường `|o` ở trên mang thông tin thật chứ không phải
-trang trí — chúng nói rằng **user có thể không có quản lý nào** (HR và Manager trong
+trang trí - chúng nói rằng **user có thể không có quản lý nào** (HR và Manager trong
 `data.sql` đều để `manager_id` NULL), và **đơn có thể chưa ai quyết định** (`decided_by`
 còn NULL khi đơn ở trạng thái PENDING).
 
-Không có bảng `roles` vì role là enum ba giá trị, gần như không đổi — chi tiết ở
+Không có bảng `roles` vì role là enum ba giá trị, gần như không đổi - chi tiết ở
 `docs/erd.md`.
 
 ### 5. Ma trận phân quyền
@@ -287,11 +287,11 @@ Không có bảng `roles` vì role là enum ba giá trị, gần như không đ�
 | `POST /api/v1/leave-requests` | **201** | 403 | 403 | Đơn vừa tạo, trạng thái PENDING |
 | `GET /api/v1/leave-requests/mine` | **200** | 403 | 403 | Đơn của chính mình |
 | `GET /api/v1/leave-requests/team` | 403 | **200** | 403 | Đơn của cấp dưới trực tiếp |
-| `PATCH /api/v1/leave-requests/{id}/decision` | 403 | **200** | 403 | Đơn sau quyết định — kèm kiểm tra cấp dưới trực tiếp |
+| `PATCH /api/v1/leave-requests/{id}/decision` | 403 | **200** | 403 | Đơn sau quyết định - kèm kiểm tra cấp dưới trực tiếp |
 | `GET /api/v1/leave-requests` | 403 | 403 | **200** | Toàn bộ đơn công ty, lọc được theo `?status=` |
 | `GET /actuator/health` | mở | mở | mở | Cho load balancer / Kubernetes |
 
-**Manager gọi `GET /leave-requests` bị 403 là đúng thiết kế** — endpoint đó dành riêng cho
+**Manager gọi `GET /leave-requests` bị 403 là đúng thiết kế** - endpoint đó dành riêng cho
 HR xem toàn công ty; quản lý dùng `/team` để chỉ thấy cấp dưới của mình.
 
 ### Kiểm chứng nhanh toàn bộ luồng
@@ -314,7 +314,7 @@ EMP=$(login employee1@co.com); MGR=$(login manager@co.com); HR=$(login hr@co.com
 
 ## Vì sao dự án nhỏ nhưng không phải "code demo"
 
-Mọi lựa chọn đơn giản hóa trong project này (VD: `schema.sql` thay vì Flyway, JWT không có refresh-token, không có màn đăng ký user) là quyết định có chủ đích ở quy mô nhỏ — không phải thiếu sót. Từng điểm được ghi chú `ponytail:` ngay trong code, kèm lý do và "nếu lớn hơn thì nâng cấp thế nào". Đọc file `docs/architecture.md` để biết chi tiết.
+Mọi lựa chọn đơn giản hóa trong project này (VD: `schema.sql` thay vì Flyway, JWT không có refresh-token, không có màn đăng ký user) là quyết định có chủ đích ở quy mô nhỏ - không phải thiếu sót. Từng điểm được ghi chú `ponytail:` ngay trong code, kèm lý do và "nếu lớn hơn thì nâng cấp thế nào". Đọc file `docs/architecture.md` để biết chi tiết.
 
 ## Tính ứng dụng thực tế
 
@@ -337,7 +337,7 @@ Không phải pattern dạy học rồi ra ngoài phải bỏ đi:
   sinh ra hai khoá khác nhau, token ký ở máy này không verify được ở máy kia. Loại lỗi chỉ
   nổ trên production.
 - **Healthcheck xếp thứ tự khởi động trong Compose.** "Container đã chạy" không có nghĩa là
-  "app sẵn sàng" — bài học người ta thường học bằng cách bị 502 trên môi trường thật.
+  "app sẵn sàng" - bài học người ta thường học bằng cách bị 502 trên môi trường thật.
 
 ### Chỗ hỏng lớn nhất: quản lý không xin nghỉ được
 
@@ -347,7 +347,7 @@ của tài khoản đó là `NULL` nên cũng không ai duyệt cho họ.
 
 Ở công ty thật, gần như mọi quản lý đều đồng thời là nhân viên của một người khác. Mô hình
 "mỗi user đúng một role" vỡ ngay tại đây. Đây là ví dụ rõ nhất cho chuyện mô hình hoá sai
-domain thì code có sạch đến mấy cũng không cứu được — và là lý do bước thiết kế ở Stage 1
+domain thì code có sạch đến mấy cũng không cứu được - và là lý do bước thiết kế ở Stage 1
 đáng giá hơn vẻ ngoài của nó.
 
 ### Còn thiếu gì nữa trước khi dùng thật
@@ -367,7 +367,7 @@ domain thì code có sạch đến mấy cũng không cứu được — và là
 
 Điều này ít người nói: **phần lớn độ khó của một hệ thống nghỉ phép thật không nằm ở luồng
 duyệt đơn.** Luồng duyệt là phần dễ. Phần khó nằm ở những thứ `docs/requirements.md` ghi là
-ngoài phạm vi — phép năm cộng dồn theo tháng, người vào giữa năm tính pro-rata, phép tồn từ
+ngoài phạm vi - phép năm cộng dồn theo tháng, người vào giữa năm tính pro-rata, phép tồn từ
 năm cũ hết hạn vào tháng mấy, nghỉ nửa ngày, nghỉ không lương, ngày lễ theo từng quốc gia,
 trùng lịch trong đội, quản lý đi vắng thì uỷ quyền cho ai duyệt.
 
@@ -379,7 +379,7 @@ là có chỗ đứng rõ ràng, không phải rải rác khắp controller.
 
 | Mục đích | Đánh giá |
 |---|---|
-| Portfolio xin việc fresher / junior | Mạnh. Phần lớn portfolio là CRUD không test, không Docker, không CI — cái này có đủ, và quan trọng hơn là có lý do cho từng lựa chọn |
+| Portfolio xin việc fresher / junior | Mạnh. Phần lớn portfolio là CRUD không test, không Docker, không CI - cái này có đủ, và quan trọng hơn là có lý do cho từng lựa chọn |
 | Chuẩn bị phỏng vấn | Mạnh. Trả lời "vì sao không dùng Flyway" kèm mốc *khi nào thì dùng* ăn điểm hơn hẳn "em chưa học tới" |
 | Nền để xây hệ thống nội bộ thật | Được, nhưng phải làm thêm: migration, tạo user, thu hồi token, email thật, và mô hình lại chuyện role |
 | Deploy nguyên trạng cho công ty | Không. Riêng chuyện quản lý không xin nghỉ được đã đủ chặn |

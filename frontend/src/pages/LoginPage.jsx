@@ -35,7 +35,7 @@ export function LoginPage() {
     <div className="login-page">
       <form className="login-form" onSubmit={handleSubmit}>
         <h1>Leave Approval System</h1>
-        <p className="hint">Tài khoản demo: manager@co.com / employee1@co.com / hr@co.com — mật khẩu: password123</p>
+        <p className="hint">Tài khoản demo: manager@co.com / employee1@co.com / hr@co.com - mật khẩu: password123</p>
         <ErrorBanner message={error} />
         <label>
           Email

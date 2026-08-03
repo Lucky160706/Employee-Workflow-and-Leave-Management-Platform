@@ -40,7 +40,7 @@ export function LeaveRequestTable({ rows, onDecide }) {
                     <button onClick={() => onDecide(r.id, 'REJECTED')}>Từ chối</button>
                   </>
                 ) : (
-                  '—'
+                  '-'
                 )}
               </td>
             )}
