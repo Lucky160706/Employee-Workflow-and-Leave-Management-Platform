@@ -16,9 +16,9 @@ import org.springframework.web.server.ResponseStatusException;
 import java.util.List;
 
 /**
- * Toan bo "luat choi" nghiep vu (ai duoc lam gi) nam o day, khong nam o controller.
- * Controller chi lam nhiem vu "nhan request, goi service, tra response" - tach lop
- * nay giup logic nghiep vu test duoc doc lap voi web layer (xem LeaveRequestServiceTest).
+ * Moi luat nghiep vu nam o day, khong nam o controller. Controller chi nhan request,
+ * goi xuong day, tra response. Nho vay LeaveRequestServiceTest kiem tra duoc luat ma
+ * khong phai dung den web layer.
  */
 @Service
 public class LeaveRequestService {
@@ -48,12 +48,13 @@ public class LeaveRequestService {
     }
 
     /**
-     * readOnly=true giu Hibernate session mo den het method - can thiet vi
-     * LeaveRequestViewDto.from() doc r.getRequester().getEmail() (quan he @ManyToOne LAZY);
-     * khong co transaction bao quanh, session da dong truoc khi map DTO se nem
-     * LazyInitializationException. (open-in-view co the "chua" loi nay nhung ta tat no
-     * o application.yml vi day la anti-pattern that su cho enterprise app - de transaction
-     * ro rang trong service layer.)
+     * readOnly=true de giu Hibernate session mo den het method. Can that, vi
+     * LeaveRequestViewDto.from() con doc getRequester().getEmail() ma quan he do la LAZY -
+     * khong co transaction bao quanh thi session dong truoc, luc map DTO se no
+     * LazyInitializationException.
+     *
+     * open-in-view cung che duoc loi nay nhung da tat trong application.yml: de transaction
+     * mo am tham den tan view layer thi sau nay khong con biet query chay o dau nua.
      */
     @Transactional(readOnly = true)
     public List<LeaveRequestViewDto> listMine(String requesterEmail) {
@@ -89,9 +90,9 @@ public class LeaveRequestService {
         LeaveRequest request = leaveRequestRepository.findById(requestId)
                 .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Leave request not found"));
 
-        // Ownership check: quan ly chi duoc duyet don cua nguoi bao cao TRUC TIEP cho minh -
-        // khong the dien ta rang buoc nay bang @PreAuthorize (can biet du lieu cua request cu the),
-        // nen kiem tra ngay trong service.
+        // Quan ly chi duoc duyet don cua cap duoi truc tiep. Rang buoc nay khong dua len
+        // @PreAuthorize duoc, vi phai doc du lieu cua chinh don do moi biet, ma annotation
+        // thi chi nhin thay role cua nguoi goi.
         Long requesterManagerId = request.getRequester().getManagerId();
         if (requesterManagerId == null || !requesterManagerId.equals(manager.getId())) {
             throw new ResponseStatusException(HttpStatus.FORBIDDEN, "You can only decide on your direct reports' requests");

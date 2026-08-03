@@ -20,10 +20,11 @@ import java.time.LocalDate;
 import static org.assertj.core.api.Assertions.assertThat;
 
 /**
- * Test tich hop that su (khong mock security filter chain) - dang nhap that qua
- * HTTP, lay JWT that, roi dung token do goi cac endpoint khac. Day la cach kiem tra
- * gia tri cao nhat cho 1 app nho: xac nhan security filter chain + JPA + controller
- * hoat dong DUNG VOI NHAU, khong chi tung phan rieng le.
+ * Khong mock security filter chain: dang nhap that qua HTTP, lay JWT that, roi dung
+ * chinh token do goi cac endpoint con lai.
+ *
+ * Voi mot app nho thi day la loai test dang gia nhat - unit test co the xanh het ma
+ * he thong van hong, chi vi filter chain, JPA va controller khong khop nhau.
  */
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 class LeaveRequestControllerIT {
@@ -71,10 +72,9 @@ class LeaveRequestControllerIT {
     }
 
     /**
-     * Token rac/het han la chuyen BINH THUONG (token song 8 tieng roi het han), khong phai
-     * loi server. Truoc day JwtAuthFilter de exception cua thu vien JWT thoat ra ngoai nen
-     * Spring tra ve 500 - frontend se bao "loi he thong" thay vi day nguoi dung ve man
-     * dang nhap. Test nay khoa lai hanh vi dung: 401.
+     * Token rac hoac het han khong phai loi server, va tung co luc bi tra thanh 500:
+     * JwtAuthFilter de exception cua thu vien JWT thoat ra ngoai, the la frontend bao
+     * "loi he thong" thay vi day nguoi dung ve man dang nhap. Test nay giu cho no la 401.
      */
     @Test
     void malformedTokenIsRejectedAsUnauthorizedNotServerError() {

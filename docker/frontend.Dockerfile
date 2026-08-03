@@ -1,6 +1,6 @@
-# Build context la thu muc goc repo (xem docker-compose.yml).
-# Node 22 (khong phai 20): Node 20 het han ho tro tu 04/2026, va Vite 8 yeu cau
-# node ^20.19 || >=22.12 - pin "20" se dung vao ban Node 20 cu hon va build vo.
+# Build context tro ve thu muc goc repo (xem docker-compose.yml).
+# Phai la Node 22 chu khong phai 20: Vite 8 doi ^20.19 || >=22.12, ma tag "20" co the
+# keo ve ban Node 20 cu hon the la build vo. Node 20 cung het han ho tro tu 04/2026.
 FROM node:22-alpine AS build
 WORKDIR /app
 COPY frontend/package.json frontend/package-lock.json ./

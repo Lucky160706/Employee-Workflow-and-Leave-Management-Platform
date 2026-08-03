@@ -13,9 +13,12 @@ import java.util.LinkedHashMap;
 import java.util.Map;
 
 /**
- * Gom xu ly loi ve 1 cho, tra ve JSON co cau truc thay vi stack trace mac dinh cua
- * Spring - day la thu 1 he thong khac (hoac 1 frontend) can de biet request that bai vi
- * sao, khong phai chi de dep. Gom "correlationId" vao response de doi chieu voi log server.
+ * Gom xu ly loi ve mot cho de moi loi tra ra deu cung mot hinh dang JSON, thay vi stack
+ * trace mac dinh cua Spring. Ben goi vao can doc duoc vi sao request hong de xu ly tiep,
+ * chu khong phai de nhin cho dep.
+ *
+ * Co kem correlationId trong response: nguoi dung bao loi chi can doc ma do, tim trong
+ * log server la ra dung request cua ho.
  */
 @RestControllerAdvice
 public class GlobalExceptionHandler {

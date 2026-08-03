@@ -1,7 +1,7 @@
 name: CI
 
-# Chi CI (build + test tu dong tren moi push/PR) - khong co buoc deploy.
-# Deploy that (CD) can them 1 quy trinh rieng, ngoai pham vi mini project nay.
+# Moi push va PR deu build + chay test. Chua co buoc deploy: CD can them moi truong,
+# secret va quy trinh rollback rieng, khong gon trong pham vi mini project.
 on:
   push:
     branches: [main, master]

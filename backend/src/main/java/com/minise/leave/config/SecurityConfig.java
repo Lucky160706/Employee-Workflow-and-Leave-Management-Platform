@@ -18,10 +18,9 @@ import org.springframework.security.web.authentication.HttpStatusEntryPoint;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 
 /**
- * "Stateless" = server khong luu session cho ai dang nhap - moi request tu chung minh
- * danh tinh bang JWT trong header. CSRF (tan cong gia mao request tu 1 trang khac) chi
- * la moi de doa khi trinh duyet TU DONG gui cookie/session; o day khong dung cookie/session
- * nen tat CSRF la dung, khong phai bo qua an toan.
+ * Khong dung session - moi request tu mang JWT di chung minh danh tinh.
+ * Nen tat CSRF o day khong phai la ha thap bao mat: CSRF chi khai thac duoc khi
+ * trinh duyet tu dong gui kem cookie, ma ta khong dung cookie.
  */
 @Configuration
 @EnableWebSecurity
@@ -41,30 +40,27 @@ public class SecurityConfig {
         http
                 .csrf(csrf -> csrf.disable())
                 .sessionManagement(sm -> sm.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
-                // Mac dinh Spring Security tra 403 cho CA hai truong hop. Tach ra:
-                //   401 = chua/khong con danh tinh hop le (chua dang nhap, token het han)
-                //         -> client biet phai dang nhap lai;
-                //   403 = da dang nhap nhung khong du quyen (giu nguyen, do accessDenied
-                //         handler mac dinh xu ly) -> dang nhap lai cung vo ich.
-                // HttpStatusEntryPoint la lop co san cua Spring Security, khong can tu viet.
+                // Mac dinh Spring tra 403 cho ca hai truong hop, kho chiu cho phia client.
+                // Tach ra: 401 khi chua co danh tinh hop le (chua dang nhap hoac token het
+                // han), 403 khi dang nhap roi nhung khong du quyen. Frontend dua vao day
+                // de biet luc nao nen da nguoi dung ve man login, luc nao thi dung.
                 .exceptionHandling(ex -> ex.authenticationEntryPoint(
                         new HttpStatusEntryPoint(HttpStatus.UNAUTHORIZED)))
                 .authorizeHttpRequests(auth -> auth
                         .requestMatchers(
                                 "/api/v1/auth/**",
                                 "/api/v1/integration/sso/validate",
-                                // "/error": khi bi tu choi quyen, Spring goi
-                                // response.sendError(403) - servlet container DISPATCH
-                                // lai request sang /error de dung body loi. Luot dispatch
-                                // do khong con SecurityContext (OncePerRequestFilter mac
-                                // dinh bo qua ERROR dispatch), nen neu /error can xac thuc
-                                // thi no bi chan tiep va status 403 ban dau bi ghi de.
+                                // Phai mo "/error", khong thi 403 bi bien thanh 401:
+                                // luc tu choi quyen, servlet container dispatch lai
+                                // request sang day de dung body loi, ma luot dispatch do
+                                // khong con SecurityContext nua. De /error doi xac thuc
+                                // thi no bi chan tiep va status ban dau bi ghi de mat.
                                 "/error",
                                 "/actuator/health/**",
                                 "/actuator/info",
-                                // Ca "/swagger-ui.html" LAN "/swagger-ui/**": pattern
-                                // "/swagger-ui/**" khong khop "/swagger-ui.html" (khac
-                                // segment), ma do lai dung la URL README bao nguoi dung mo.
+                                // Can ca hai dong duoi: "/swagger-ui/**" khong khop
+                                // "/swagger-ui.html" vi khac segment, ma do lai dung la
+                                // duong dan README bao nguoi dung mo.
                                 "/swagger-ui.html",
                                 "/swagger-ui/**",
                                 "/v3/api-docs/**"
@@ -83,11 +79,10 @@ public class SecurityConfig {
     }
 
     /**
-     * Khong can tu tao DaoAuthenticationProvider: khi trong context co san 1 bean
-     * UserDetailsService (UserDetailsServiceImpl) va 1 bean PasswordEncoder, Spring
-     * Security tu noi chung lai thanh dung provider do. Tu khai bao lai chi lap y het
-     * (va setter cua no da deprecated tu Security 6.4). LeaveRequestControllerIT dang
-     * nhap that qua HTTP nen neu day khong con hoat dong, test do do ngay.
+     * Khong tu tao DaoAuthenticationProvider: da co bean UserDetailsService va
+     * PasswordEncoder trong context thi Spring Security tu noi chung lai. Khai bao lai
+     * vua thua, vua dinh setter da deprecated tu Security 6.4.
+     * LeaveRequestControllerIT dang nhap that qua HTTP nen hong cho nay la no do ngay.
      */
     @Bean
     public AuthenticationManager authenticationManager(AuthenticationConfiguration config) throws Exception {

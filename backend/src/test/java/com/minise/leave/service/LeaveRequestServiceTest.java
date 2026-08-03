@@ -23,14 +23,12 @@ import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.mockito.Mockito.when;
 
 /**
- * Kiem tra dung 2 luat nghiep vu quan trong nhat, ca 2 deu KHONG the dien ta bang
- * @PreAuthorize (can biet du lieu cu the cua tung request) nen phai kiem tra o
- * service layer: (1) quan ly chi duoc duyet don cua cap duoi TRUC TIEP cua minh,
- * (2) mot don da co quyet dinh thi khong sua lai duoc nua.
+ * Chi kiem hai luat quan trong nhat, cung la hai luat khong dua len @PreAuthorize duoc
+ * vi phai doc du lieu cua tung don moi biet: quan ly chi duyet duoc don cua cap duoi
+ * truc tiep, va don da co quyet dinh thi khong sua lai.
  *
- * ReflectionTestUtils.setField duoc dung de gan `id` cho entity trong test - vi
- * `id` chi duoc JPA tu sinh khi luu that vao DB, o day ta mock repository nen
- * khong co buoc luu that.
+ * Phai dung ReflectionTestUtils.setField de gan id cho entity: binh thuong JPA tu sinh
+ * id luc luu vao DB, nhung o day repository bi mock nen khong co buoc luu that.
  */
 @ExtendWith(MockitoExtension.class)
 class LeaveRequestServiceTest {

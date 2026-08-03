@@ -6,10 +6,9 @@ import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;
 
 /**
- * ponytail: chi log ra console thay vi gui email that - du de minh hoa "cho noi"
- * (seam) ma khong can dung mot mail server that trong bai hoc. Nang cap: doi
- * class nay thanh 1 impl goi JavaMailSender/AWS SES hoac publish message vao
- * 1 queue (RabbitMQ/SQS) - LeaveRequestService khong doi 1 dong nao.
+ * GIOI HAN: chi log ra console chu khong gui email that, du de thay cho noi nam o dau
+ * ma khong phai dung mail server cho mot bai hoc. Thay bang ban goi JavaMailSender,
+ * SES hoac day message vao queue la xong, khong dong gi den service.
  */
 @Component
 public class MockNotificationClient implements NotificationClient {

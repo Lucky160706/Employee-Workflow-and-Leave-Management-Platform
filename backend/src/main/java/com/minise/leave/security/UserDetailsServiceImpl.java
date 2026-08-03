@@ -8,9 +8,8 @@ import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 
 /**
- * Cau tram noi Spring Security "dung nguoi dung o dau" voi database cua chung ta.
- * Dung thang builder co san cua Spring Security (User.withUsername...) thay vi tu
- * viet class UserDetails rieng - khong can them 1 class cho 4 field.
+ * Cho Spring Security biet lay thong tin nguoi dung o dau. Dung luon builder co san
+ * thay vi tu viet class UserDetails rieng, do them mot class cho bon field thi khong bo.
  */
 @Service
 public class UserDetailsServiceImpl implements UserDetailsService {

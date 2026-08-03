@@ -1,11 +1,10 @@
 -- Du lieu seed cho demo/hoc tap - KHONG dung cho production that.
 -- Tat ca tai khoan dung chung 1 mat khau: password123 (da bam BCrypt ben duoi).
 --
--- Moi INSERT deu co "WHERE NOT EXISTS": voi H2 in-memory thi khong can (DB moi tinh
--- moi lan chay), nhung voi Postgres trong docker-compose thi volume db-data song lau
--- hon container - `docker compose up` lan thu HAI se chay lai file nay va dam vao
--- UNIQUE(email), app chet ngay luc khoi dong. Dang "SELECT ... WHERE NOT EXISTS" chay
--- dung tren ca H2 lan Postgres, khong can 2 ban seed rieng.
+-- Moi INSERT deu kem "WHERE NOT EXISTS". Voi H2 thi thua, vi DB moi tinh moi lan chay.
+-- Nhung Postgres trong docker-compose co volume song lau hon container, nen lan
+-- `docker compose up` thu hai se chay lai file nay va dam vao UNIQUE(email), app chet
+-- ngay luc khoi dong. Kieu viet nay chay dung tren ca hai, khoi phai tach hai ban seed.
 INSERT INTO users (email, password_hash, full_name, role, manager_id)
 SELECT 'hr@co.com', '$2a$10$WMj.CoD7gOSRbFXJ/Fn33e33C.Nr1ib.Qm70YMoz16c9c3WUHSjIW', 'Hoa (HR)', 'HR', NULL
 WHERE NOT EXISTS (SELECT 1 FROM users WHERE email = 'hr@co.com');

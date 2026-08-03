@@ -57,7 +57,7 @@ healthcheck xếp thứ tự khởi động, **nginx** phục vụ file tĩnh v�
 
 ### Những thứ cố tình không dùng
 
-Phần này đáng đọc hơn phần trên. Mỗi dòng đều có ghi chú `ponytail:` tương ứng trong code:
+Phần này đáng đọc hơn phần trên. Mỗi dòng đều có ghi chú `GIOI HAN:` tương ứng trong code:
 
 | Không dùng | Dùng gì thay thế | Khi nào thì nên thêm vào |
 |---|---|---|
@@ -317,7 +317,7 @@ EMP=$(login employee1@co.com); MGR=$(login manager@co.com); HR=$(login hr@co.com
 
 ## Vì sao dự án nhỏ nhưng không phải "code demo"
 
-Mọi lựa chọn đơn giản hóa trong project này (VD: `schema.sql` thay vì Flyway, JWT không có refresh-token, không có màn đăng ký user) là quyết định có chủ đích ở quy mô nhỏ - không phải thiếu sót. Từng điểm được ghi chú `ponytail:` ngay trong code, kèm lý do và "nếu lớn hơn thì nâng cấp thế nào". Đọc file `docs/architecture.md` để biết chi tiết.
+Mọi lựa chọn đơn giản hóa trong project này (VD: `schema.sql` thay vì Flyway, JWT không có refresh-token, không có màn đăng ký user) là quyết định có chủ đích ở quy mô nhỏ - không phải thiếu sót. Từng điểm được ghi chú `GIOI HAN:` ngay trong code, kèm lý do và "nếu lớn hơn thì nâng cấp thế nào". Đọc file `docs/architecture.md` để biết chi tiết.
 
 ## Tính ứng dụng thực tế
 
@@ -457,7 +457,7 @@ phòng, quản lý đi công tác thì ai duyệt thay. Đến bài này bạn s
 
 Giữ đúng vài quy ước có sẵn, không phải vì hình thức mà vì chúng là lý do repo còn đọc được:
 
-- **Mỗi chỗ đơn giản hoá có chủ ý phải kèm ghi chú `ponytail:`** nêu rõ giới hạn và cách nâng
+- **Mỗi chỗ đơn giản hoá có chủ ý phải kèm ghi chú `GIOI HAN:`** nêu rõ giới hạn và cách nâng
   cấp khi cần. Đây là thứ phân biệt "chưa biết nên không làm" với "biết rõ nên chưa làm".
 - **Chạy `./mvnw verify` trước khi mở PR.** CI cũng chạy đúng lệnh đó, nên hỏng ở máy bạn thì
   cũng hỏng ở CI.

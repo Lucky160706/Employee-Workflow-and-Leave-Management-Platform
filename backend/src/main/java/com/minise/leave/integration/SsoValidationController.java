@@ -6,14 +6,12 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 /**
- * Mo phong "cho noi" ma mot SSO/IdP that (SAML/OIDC) cua cong ty se goi vao de
- * xac thuc nguoi dung, thay vi nguoi dung tu nhap email/mat khau nhu Stage 2.
- * KHONG duoc noi vao luong dang nhap thuc te (dang nhap van dung JWT local) -
- * day chi la endpoint minh hoa cho phan "tich hop doanh nghiep".
+ * Cho de SSO cua cong ty goi vao xac thuc nguoi dung, thay cho viec tu nhap email
+ * va mat khau. Luu y: endpoint nay chua duoc noi vao luong dang nhap that, dang nhap
+ * van chay bang JWT local - day moi chi la cho de san.
  *
- * ponytail: tra ve ket qua gia dinh san (bat ky token khong rong nao cung "valid").
- * Nang cap that: thay bang Spring Security OAuth2 Resource Server / oauth2-client
- * de xac thuc voi 1 IdP that (Okta, Keycloak, Azure AD...).
+ * GIOI HAN: token nao khong rong cung duoc coi la hop le. Muon lam that thi dung
+ * Spring Security OAuth2 Resource Server de noi voi Okta, Keycloak hay Azure AD.
  */
 @RestController
 @RequestMapping("/api/v1/integration/sso")

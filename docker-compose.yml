@@ -29,9 +29,9 @@ services:
         condition: service_healthy
     ports:
       - "8080:8080"
-    # Cung ly do db co healthcheck: "container da chay" khong co nghia la "app san sang".
-    # JVM + Spring Boot mat vai giay de khoi dong, nen start_period cho no thoi gian do
-    # ma khong tinh la that bai. wget co san trong BusyBox cua image alpine.
+    # Container chay roi khong co nghia la app da san sang nhan request. JVM voi Spring
+    # Boot mat vai chuc giay moi len, start_period cho no khoang tho do ma khong bi tinh
+    # la that bai. wget dung luon duoc, BusyBox trong image alpine da co san.
     healthcheck:
       test: ["CMD-SHELL", "wget -q -O - http://localhost:8080/actuator/health | grep -q UP"]
       interval: 5s
@@ -43,8 +43,8 @@ services:
     build:
       context: .
       dockerfile: docker/frontend.Dockerfile
-    # Doi backend UP han: nginx resolve hostname "backend" luc khoi dong, backend chua
-    # san sang thi frontend tra 502 cho moi request /api cho den khi nguoi dung tu reload.
+    # Phai doi backend UP han. nginx resolve hostname "backend" ngay luc khoi dong, neu
+    # luc do backend chua len thi moi request /api tra 502 cho den khi co ai reload lai.
     depends_on:
       backend:
         condition: service_healthy

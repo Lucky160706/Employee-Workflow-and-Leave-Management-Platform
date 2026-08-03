@@ -1,10 +1,10 @@
-# Build context la thu muc goc repo (xem docker-compose.yml) de Dockerfile nay
-# nam trong docker/ ma van COPY duoc code trong backend/.
+# Build context tro ve thu muc goc repo (xem docker-compose.yml), nho vay Dockerfile
+# nam trong docker/ van COPY duoc code ben backend/.
 FROM maven:3.9-eclipse-temurin-21 AS build
 WORKDIR /app
 COPY backend/pom.xml .
-# Tai dependency truoc, tach rieng khoi COPY source - Docker cache layer nay lai,
-# lan build sau chi sua code se khong phai tai lai toan bo dependency.
+# Tai dependency truoc khi COPY source. Docker cache lai layer nay nen nhung lan build
+# sau, neu chi sua code thi khong phai tai lai ca dong dependency.
 RUN mvn -q dependency:go-offline
 COPY backend/src ./src
 RUN mvn -q package -DskipTests

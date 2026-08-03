@@ -1,9 +1,9 @@
 package com.minise.leave.domain;
 
 /**
- * 3 vai tro co dinh trong he thong. Chi 3 gia tri, gan nhu khong doi theo thoi gian
- * nen luu thang dang string tren cot `role`, khong can bang lookup rieng (roles table).
- * Neu sau nay can gan nhieu role/thay doi linh hoat qua UI admin, do la luc tach bang.
+ * Ba vai tro, luu thang thanh chuoi tren cot role. Chua can bang roles rieng vi danh
+ * sach nay gan nhu khong doi. Den luc admin muon tu them role qua giao dien, hoac mot
+ * nguoi phai mang nhieu role cung luc, thi moi tach bang.
  */
 public enum Role {
     EMPLOYEE,

@@ -5,8 +5,8 @@ const AuthContext = createContext(null)
 
 export function AuthProvider({ children }) {
   const [user, setUser] = useState(null)
-  // "hydrating" = dang kiem tra token cu (neu co) con dung khong truoc khi cho vao app -
-  // tranh nhap nhang mot khoanh khac hien ra man dang nhap roi lai nhay vao dashboard.
+  // Dang kiem token cu con dung khong truoc khi cho vao app. Khong co buoc nay thi
+  // man dang nhap loe len mot cai roi moi nhay vao dashboard, nhin rat gion.
   const [hydrating, setHydrating] = useState(true)
 
   useEffect(() => {

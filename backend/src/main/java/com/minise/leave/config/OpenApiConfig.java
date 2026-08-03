@@ -9,9 +9,8 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
 /**
- * Ban OpenAPI spec xuat ra tu day (/v3/api-docs, xem qua /swagger-ui.html) chinh la
- * "hop dong" ma bat ky he thong nao khac muon goi vao app nay se doc de biet: co
- * nhung endpoint gi, can gui gi, tra ve gi - khong can doc code moi hieu duoc API.
+ * Spec sinh ra o /v3/api-docs, xem qua /swagger-ui.html. Doi tac muon goi vao app nay
+ * chi can doc do la biet co endpoint gi, gui gi, nhan lai gi - khong phai xin source code.
  */
 @Configuration
 public class OpenApiConfig {

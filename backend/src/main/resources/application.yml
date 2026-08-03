@@ -2,9 +2,9 @@ spring:
   application:
     name: leave-approval-system
   datasource:
-    # H2 in-memory: du du chay Stage 2/3 khong can cai dat gi them. DB_CLOSE_DELAY=-1
-    # giu DB song suot vong doi app (khong mat du lieu giua cac connection), nhung
-    # reset lai tu dau moi lan restart app - du de demo, chua phai luu tru that.
+    # H2 chay thang trong bo nho, khoi phai cai dat gi de chay Stage 2/3.
+    # DB_CLOSE_DELAY=-1 giu DB song suot vong doi app, khong thi dong connection cuoi
+    # la mat sach du lieu. Van reset moi lan restart - du demo, chua phai luu tru that.
     url: jdbc:h2:mem:leavedb;DB_CLOSE_DELAY=-1
     driver-class-name: org.h2.Driver
     username: sa
@@ -21,8 +21,8 @@ spring:
       enabled: true
       path: /h2-console
 
-# app.jwt.secret doc tu bien moi truong JWT_SECRET khi deploy that (12-factor config) -
-# gia tri mac dinh chi danh cho chay local/demo.
+# Secret doc tu bien moi truong JWT_SECRET luc deploy. Gia tri mac dinh duoi day chi de
+# chay local, dung mang len server.
 app:
   jwt:
     secret: ${JWT_SECRET:dev-only-secret-please-change-me-0123456789abcdef}

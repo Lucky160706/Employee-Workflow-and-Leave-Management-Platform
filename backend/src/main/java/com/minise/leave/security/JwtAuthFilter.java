@@ -15,9 +15,8 @@ import org.springframework.web.filter.OncePerRequestFilter;
 import java.io.IOException;
 
 /**
- * Chay 1 lan cho moi request (OncePerRequestFilter): doc header "Authorization: Bearer <token>",
- * xac minh chu ky + con han khong, roi "dang nhap" nguoi dung do vao SecurityContext cho
- * request nay - khong luu session, moi request tu xac thuc lai bang chinh token cua no.
+ * Doc header Authorization, verify token, roi dat nguoi dung vao SecurityContext cho
+ * dung request nay thoi. Khong co session nen request sau lai lam lai tu dau.
  */
 @Component
 public class JwtAuthFilter extends OncePerRequestFilter {
@@ -45,10 +44,10 @@ public class JwtAuthFilter extends OncePerRequestFilter {
 
         String token = header.substring("Bearer ".length());
 
-        // Token het han/sai chu ky/nguoi dung khong ton tai => KHONG nem exception ra
-        // ngoai. Neu de exception thoat khoi filter, Spring tra ve 500 Internal Server
-        // Error cho mot chuyen hoan toan binh thuong (token het han sau 8 tieng). Bo qua
-        // token hong va di tiep: SecurityContext trong => filter chain sau do tu tra 401.
+        // Nuot exception o day la co y. Token het han sau 8 tieng la chuyen binh thuong,
+        // de no thoat ra khoi filter thi Spring tra 500 cho mot tinh huong khong he la
+        // loi server. Cu bo qua token hong roi di tiep - SecurityContext rong thi filter
+        // phia sau tu tra 401.
         try {
             String email = jwtService.extractEmail(token);
             if (email != null && SecurityContextHolder.getContext().getAuthentication() == null) {

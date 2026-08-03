@@ -5,8 +5,9 @@ import { ErrorBanner } from '../components/ErrorBanner'
 import { LeaveRequestTable } from '../components/LeaveRequestTable'
 
 /**
- * Dung chung cho MANAGER va HR: 2 role khac nhau ve dieu duoc fetch (team vs toan bo)
- * va co duoc duyet don khong - khong tach thanh 2 dashboard rieng cho 1 bang giong het nhau.
+ * MANAGER va HR dung chung man nay. Hai role chi khac nhau o cho lay du lieu (doi minh
+ * hay toan cong ty) va co nut duyet hay khong, khong dang tach thanh hai file cho mot
+ * cai bang giong het nhau.
  */
 export function ManagerDashboard() {
   const { user, logout } = useAuth()

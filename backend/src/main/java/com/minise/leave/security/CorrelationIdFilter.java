@@ -14,11 +14,11 @@ import java.io.IOException;
 import java.util.UUID;
 
 /**
- * Khi 1 request di qua nhieu service (vi du: API gateway -> service nay -> service khac),
- * day la cach duy nhat de lan ra toan bo duong di cua no trong log khi co loi: gan 1
- * "correlation ID" (lay tu header neu he thong goi vao da co san, tu sinh moi neu chua co)
- * vao MDC (Mapped Diagnostic Context) de moi dong log cua request nay deu mang theo no.
- * Thieu cai nay, debug 1 he thong nhieu service gan nhu khong the.
+ * Gan cho moi request mot ma rieng roi nhet vao MDC, de tat ca dong log sinh ra trong
+ * request do deu mang theo ma ay. Lay tu header neu ben goi vao da co san, khong thi tu sinh.
+ *
+ * Luc he thong chay mot minh thi thay thua. Den khi request di qua ba bon service moi
+ * thay khong co no thi khong the lan ra duong di cua mot request hong.
  */
 @Component
 @Order(1)

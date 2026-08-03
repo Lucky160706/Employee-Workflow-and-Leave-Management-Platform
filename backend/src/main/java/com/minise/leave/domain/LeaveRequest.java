@@ -13,9 +13,8 @@ public class LeaveRequest {
     private Long id;
 
     /**
-     * @ManyToOne (khong phai plain Long FK) de Spring Data JPA co the query truc tiep
-     * qua quan he, vi du findByRequester_ManagerId(...) - day la cach idiomatic hon
-     * la tu viet JOIN bang tay.
+     * De @ManyToOne chu khong de Long cho gon, vi nho vay Spring Data doc duoc xuyen
+     * qua quan he: findByRequester_ManagerId(...) tu sinh ra JOIN, khoi viet tay.
      */
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "requester_id", nullable = false)
@@ -59,9 +58,8 @@ public class LeaveRequest {
     }
 
     /**
-     * Ghi nhan quyet dinh duyet/tu choi. Cac rang buoc nghiep vu (ai duoc duyet,
-     * don co con PENDING khong) duoc kiem tra o service layer truoc khi goi ham nay -
-     * entity chi chiu trach nhiem luu dung trang thai, khong tu kiem tra quyen.
+     * Chi ghi lai quyet dinh, khong kiem tra gi ca. Ai duoc duyet va don con PENDING
+     * hay khong da duoc service kiem truoc khi goi vao day.
      */
     public void decide(LeaveStatus decision, User decider) {
         this.status = decision;

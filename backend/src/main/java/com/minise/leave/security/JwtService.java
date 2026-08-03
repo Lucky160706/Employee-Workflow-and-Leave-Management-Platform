@@ -12,13 +12,11 @@ import java.util.Date;
 import java.util.function.Function;
 
 /**
- * JWT (JSON Web Token) = 1 chuoi ma hoa mang theo danh tinh nguoi dung (email, role),
- * duoc ky bang 1 khoa bi mat (secret) o server. Client gui lai token nay trong header
- * moi request, server chi can verify chu ky - khong can luu session trong DB/memory.
+ * Ky va verify token dang nhap. Server khong luu gi ca - token tu mang theo email va
+ * role, chi can kiem chu ky la biet that hay gia.
  *
- * Khong co refresh-token o day: token song 8 gio (1 ca lam viec), het han thi dang
- * nhap lai. ponytail: neu can phien dang nhap keo dai nhieu ngay, day la cho them
- * refresh-token (token phu de xin cap access-token moi ma khong can nhap lai mat khau).
+ * Token song 8 tieng, vua dung mot ca lam viec, het han thi dang nhap lai.
+ * GIOI HAN: chua co refresh-token. Can phien keo dai nhieu ngay thi them o day.
  */
 @Service
 public class JwtService {
@@ -30,9 +28,9 @@ public class JwtService {
             @Value("${app.jwt.secret}") String secret,
             @Value("${app.jwt.expiration-ms}") long expirationMs
     ) {
-        // UTF_8 tuong minh: secret.getBytes() dung charset mac dinh cua may (Windows co
-        // the la windows-1252, Linux la UTF-8) - cung 1 JWT_SECRET se sinh ra 2 khoa khac
-        // nhau tren 2 may, token ky o may nay khong verify duoc o may kia.
+        // Phai ghi ro UTF_8. getBytes() khong tham so se lay charset mac dinh cua may -
+        // Windows co the la windows-1252, Linux la UTF-8 - nen cung mot JWT_SECRET lai
+        // ra hai khoa khac nhau, token ky o may dev khong verify duoc tren server.
         this.signingKey = Keys.hmacShaKeyFor(secret.getBytes(StandardCharsets.UTF_8));
         this.expirationMs = expirationMs;
     }

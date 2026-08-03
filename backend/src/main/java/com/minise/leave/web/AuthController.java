@@ -30,8 +30,8 @@ public class AuthController {
 
     @PostMapping("/login")
     public LoginResponse login(@Valid @RequestBody LoginRequest request) {
-        // authenticate() se tu goi UserDetailsServiceImpl + so sanh mat khau (BCrypt) -
-        // neu sai email/mat khau, no tu nem BadCredentialsException (Spring xu ly thanh 401/403).
+        // authenticate() tu goi UserDetailsServiceImpl roi so mat khau bang BCrypt.
+        // Sai email hoac mat khau thi no nem BadCredentialsException, khoi tu kiem tay.
         Authentication auth = authenticationManager.authenticate(
                 new UsernamePasswordAuthenticationToken(request.email(), request.password()));
 

@@ -3,9 +3,8 @@ package com.minise.leave.domain;
 import jakarta.persistence.*;
 
 /**
- * `manager_id` la self-reference (tu tro vao chinh bang users) - du de dien ta
- * "quan ly truc tiep la ai" ma khong can mo hinh cay to chuc (Department/Team)
- * phuc tap hon muc bai toan yeu cau.
+ * manager_id tu tro vao chinh bang users. Du de tra loi "quan ly truc tiep la ai",
+ * khong phai dung them bang Department hay Team cho mot quan he chi sau mot cap.
  */
 @Entity
 @Table(name = "users")
