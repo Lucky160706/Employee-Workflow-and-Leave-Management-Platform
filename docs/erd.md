@@ -4,31 +4,35 @@
 
 ```mermaid
 erDiagram
-    USERS ||--o{ USERS : "manager_id (tự tham chiếu)"
-    USERS ||--o{ LEAVE_REQUESTS : "requester_id"
-    USERS ||--o{ LEAVE_REQUESTS : "decided_by"
+    USERS |o--o{ USERS          : "quản lý trực tiếp"
+    USERS ||--o{ LEAVE_REQUESTS : "gửi đơn"
+    USERS |o--o{ LEAVE_REQUESTS : "ra quyết định"
 
     USERS {
-        bigint id PK
-        varchar email UK "dùng để đăng nhập"
-        varchar password_hash "BCrypt, không lưu plain text"
-        varchar full_name
-        varchar role "EMPLOYEE / MANAGER / HR"
-        bigint manager_id FK "null nếu không có quản lý trực tiếp (VD: HR)"
+        bigint  id            PK "khoá chính"
+        varchar email         UK "dùng để đăng nhập"
+        varchar password_hash    "băm bằng BCrypt, không lưu chữ thô"
+        varchar full_name        "tên hiển thị"
+        varchar role             "EMPLOYEE · MANAGER · HR"
+        bigint  manager_id    FK "null nếu không có quản lý trực tiếp (VD: HR)"
     }
 
     LEAVE_REQUESTS {
-        bigint id PK
-        bigint requester_id FK "ai gửi đơn"
-        date start_date
-        date end_date
-        varchar reason
-        varchar status "PENDING / APPROVED / REJECTED"
-        bigint decided_by FK "quản lý nào đã duyệt, null nếu còn PENDING"
-        timestamp decided_at "null nếu còn PENDING"
-        timestamp created_at
+        bigint    id           PK "khoá chính"
+        bigint    requester_id FK "người gửi đơn"
+        date      start_date      "ngày bắt đầu nghỉ"
+        date      end_date        "ngày kết thúc nghỉ"
+        varchar   reason          "lý do xin nghỉ"
+        varchar   status          "PENDING · APPROVED · REJECTED"
+        bigint    decided_by   FK "quản lý nào đã quyết định, null nếu còn PENDING"
+        timestamp decided_at      "null nếu còn PENDING"
+        timestamp created_at      "thời điểm gửi đơn"
     }
 ```
+
+Ký hiệu chân quạ ở hai đầu mỗi đường nối cho biết số lượng: `||` là bắt buộc đúng một, `|o`
+là không hoặc một, `o{` là không hoặc nhiều. Hai đường dùng `|o` không phải trang trí —
+chúng nói rằng user **có thể không có quản lý nào**, và đơn **có thể chưa ai quyết định**.
 
 ## Vì sao chỉ 2 bảng (không có bảng `roles`, `departments`)
 

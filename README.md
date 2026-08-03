@@ -244,31 +244,37 @@ cấp dưới mình hay không thì phải đọc database — nên phép kiểm
 
 ```mermaid
 erDiagram
-    USERS ||--o{ USERS : "manager_id — tự tham chiếu"
-    USERS ||--o{ LEAVE_REQUESTS : "requester_id — ai gửi"
-    USERS ||--o{ LEAVE_REQUESTS : "decided_by — ai duyệt"
+    USERS |o--o{ USERS          : "quản lý trực tiếp"
+    USERS ||--o{ LEAVE_REQUESTS : "gửi đơn"
+    USERS |o--o{ LEAVE_REQUESTS : "ra quyết định"
 
     USERS {
-        bigint id PK
-        varchar email UK "dùng để đăng nhập"
-        varchar password_hash "BCrypt"
-        varchar full_name
-        varchar role "EMPLOYEE / MANAGER / HR"
-        bigint manager_id FK "null nếu không có quản lý"
+        bigint  id            PK "khoá chính"
+        varchar email         UK "dùng để đăng nhập"
+        varchar password_hash    "băm bằng BCrypt, không lưu chữ thô"
+        varchar full_name        "tên hiển thị"
+        varchar role             "EMPLOYEE · MANAGER · HR"
+        bigint  manager_id    FK "null nếu không có quản lý trực tiếp"
     }
 
     LEAVE_REQUESTS {
-        bigint id PK
-        bigint requester_id FK
-        date start_date
-        date end_date
-        varchar reason
-        varchar status "PENDING / APPROVED / REJECTED"
-        bigint decided_by FK "null khi còn PENDING"
-        timestamp decided_at "null khi còn PENDING"
-        timestamp created_at
+        bigint    id           PK "khoá chính"
+        bigint    requester_id FK "người gửi đơn"
+        date      start_date      "ngày bắt đầu nghỉ"
+        date      end_date        "ngày kết thúc nghỉ"
+        varchar   reason          "lý do xin nghỉ"
+        varchar   status          "PENDING · APPROVED · REJECTED"
+        bigint    decided_by   FK "null khi đơn còn PENDING"
+        timestamp decided_at      "null khi đơn còn PENDING"
+        timestamp created_at      "thời điểm gửi đơn"
     }
 ```
+
+Đọc ký hiệu chân quạ ở đầu mỗi đường nối: `||` là bắt buộc đúng một, `|o` là không hoặc
+một, `o{` là không hoặc nhiều. Nên hai đường `|o` ở trên mang thông tin thật chứ không phải
+trang trí — chúng nói rằng **user có thể không có quản lý nào** (HR và Manager trong
+`data.sql` đều để `manager_id` NULL), và **đơn có thể chưa ai quyết định** (`decided_by`
+còn NULL khi đơn ở trạng thái PENDING).
 
 Không có bảng `roles` vì role là enum ba giá trị, gần như không đổi — chi tiết ở
 `docs/erd.md`.
