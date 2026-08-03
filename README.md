@@ -383,3 +383,82 @@ là có chỗ đứng rõ ràng, không phải rải rác khắp controller.
 | Chuẩn bị phỏng vấn | Mạnh. Trả lời "vì sao không dùng Flyway" kèm mốc *khi nào thì dùng* ăn điểm hơn hẳn "em chưa học tới" |
 | Nền để xây hệ thống nội bộ thật | Được, nhưng phải làm thêm: migration, tạo user, thu hồi token, email thật, và mô hình lại chuyện role |
 | Deploy nguyên trạng cho công ty | Không. Riêng chuyện quản lý không xin nghỉ được đã đủ chặn |
+
+## Hướng phát triển thêm
+
+Nếu bạn clone repo này về để luyện tay, phần dưới là danh sách việc xếp theo độ khó tăng
+dần. Mỗi bài đều ghi rõ sửa ở file nào và thế nào là xong, để bạn không mất thời gian mò
+xem nên bắt đầu từ đâu. Cứ làm từ trên xuống, vì các bài sau giả định bạn đã quen codebase
+qua các bài trước.
+
+### Mức 1 - làm quen, mỗi bài khoảng một hai tiếng
+
+| Việc cần làm | Sửa ở đâu | Xong là khi |
+|---|---|---|
+| Hiện số ngày nghỉ trên mỗi dòng bảng | `LeaveRequestViewDto` hoặc `LeaveRequestTable.jsx` | Đơn 01/09 đến 03/09 hiện "3 ngày", không phải 2 |
+| Cho HR lọc đơn theo trạng thái | `ManagerDashboard.jsx` | Backend đã có sẵn `?status=PENDING`, frontend chưa hề gọi tới. Chọn xong lọc là bảng đổi ngay |
+| Đặt lại route cho HR | `App.jsx` | HR đang phải vào đường dẫn tên `/manager` dù họ không phải quản lý. Tách route riêng mà vẫn dùng chung một component |
+| Chặn chọn ngày trong quá khứ | `LeaveRequestForm.jsx` và `LeaveRequestService.createRequest()` | Chặn ở cả hai nơi. Chặn mỗi frontend là chưa đủ vì gọi thẳng API vẫn lọt |
+
+Bài cuối đáng làm nhất trong nhóm này: nó dạy đúng một nguyên tắc là **dữ liệu vào phải
+kiểm tra ở phía server**, còn kiểm tra ở giao diện chỉ để người dùng đỡ khó chịu.
+
+### Mức 2 - chạm vào kiến trúc
+
+**Cho phép huỷ đơn khi còn PENDING.** Thêm giá trị `CANCELLED` vào `LeaveStatus`, một
+endpoint mới, và luật "chỉ người gửi mới huỷ được đơn của chính mình". Chỗ khó không phải
+code mà là câu hỏi: đơn đã duyệt rồi thì có huỷ được không, và nếu có thì ai duyệt việc huỷ.
+Trả lời được câu đó trước khi gõ dòng nào.
+
+**Viết test cho frontend.** Hiện tại chưa có gì cả, `npm run build` chỉ đảm bảo code dịch
+được chứ không đảm bảo chạy đúng. Cài Vitest với React Testing Library, bắt đầu bằng
+`ProtectedRoute` (dễ nhất, thuần logic) rồi tới luồng đăng nhập ở `LoginPage.jsx`. Xong là
+khi thêm được job frontend test vào `.github/workflows/ci.yml`.
+
+**Phân trang cho danh sách đơn.** `LeaveRequestService.listAll()` đang trả `findAll()`, tức
+công ty 300 người thì HR tải toàn bộ trong một response. Spring Data đã hỗ trợ sẵn qua
+`Pageable`, nên phần backend khá nhanh. Phần khó là frontend và việc response đổi hình dạng
+sẽ làm hỏng client cũ - đây đúng là lúc `/api/v1/` chứng minh nó có ích.
+
+**Gửi email thật.** `NotificationClient` là interface, `MockNotificationClient` chỉ ghi log.
+Viết thêm một implementation dùng `spring-boot-starter-mail` là xong, **không phải sửa một
+dòng nào trong `LeaveRequestService`**. Nếu bạn thấy mình buộc phải sửa service thì nghĩa là
+interface đang thiết kế sai - đó mới là bài học của bài này.
+
+**Thay `schema.sql` bằng Flyway.** Điều kiện kích hoạt đã ghi ở mục "Những thứ cố tình không
+dùng": lần đổi schema đầu tiên sau khi đã deploy. Muốn thấy vì sao nó cần thiết, hãy làm bài
+"huỷ đơn" ở trên trước, rồi thử thêm cột mới trong khi Postgres đang có dữ liệu thật.
+
+### Mức 3 - đụng vào domain thật
+
+Ba bài này không có đáp án đúng duy nhất, và đó là điểm mấu chốt. Chúng khó vì phải quyết
+định nghiệp vụ chứ không phải vì kỹ thuật.
+
+**Sửa lỗi quản lý không xin nghỉ được.** Đọc lại mục "Chỗ hỏng lớn nhất" ở trên. Có ít nhất
+ba hướng: bỏ hẳn khái niệm role một-một mà tách thành bảng phân quyền riêng; hoặc giữ role
+nhưng cho `MANAGER` gửi đơn được và gán `manager_id` cho họ; hoặc mô hình lại theo kiểu ai
+cũng là nhân viên, còn "quản lý" chỉ là một quan hệ chứ không phải một chức danh. Hướng thứ
+ba gần với thực tế nhất và cũng phá vỡ nhiều code nhất. Chọn hướng nào cũng được, miễn viết
+được lý do vào `docs/architecture.md`.
+
+**Tính số ngày phép còn lại.** Đây là phần chiếm phần lớn công sức của một hệ thống nghỉ
+phép thật: phép cộng dồn theo tháng, người vào giữa năm tính theo tỷ lệ, phép tồn năm cũ hết
+hạn vào tháng mấy, nghỉ nửa ngày, ngày lễ không trừ phép. Bắt đầu bằng phiên bản đơn giản
+nhất là mỗi người 12 ngày một năm, rồi thêm dần từng luật một.
+
+**Duyệt nhiều cấp và uỷ quyền khi quản lý đi vắng.** Nghỉ trên 5 ngày phải qua cả trưởng
+phòng, quản lý đi công tác thì ai duyệt thay. Đến bài này bạn sẽ thấy `status` kiểu chuỗi
+đơn lẻ không còn đủ, và sẽ cần một bảng lịch sử duyệt riêng.
+
+### Nếu bạn muốn gửi pull request về repo này
+
+Giữ đúng vài quy ước có sẵn, không phải vì hình thức mà vì chúng là lý do repo còn đọc được:
+
+- **Mỗi chỗ đơn giản hoá có chủ ý phải kèm ghi chú `ponytail:`** nêu rõ giới hạn và cách nâng
+  cấp khi cần. Đây là thứ phân biệt "chưa biết nên không làm" với "biết rõ nên chưa làm".
+- **Chạy `./mvnw verify` trước khi mở PR.** CI cũng chạy đúng lệnh đó, nên hỏng ở máy bạn thì
+  cũng hỏng ở CI.
+- **Luật nghiệp vụ đặt ở service, đừng đặt ở controller.** Controller chỉ nhận request, gọi
+  service, trả response. Nhìn `LeaveRequestService.decide()` để thấy mẫu.
+- **Viết comment giải thích *vì sao*, không phải *cái gì*.** Code đã nói nó làm gì rồi. Cái
+  người đọc sau cần biết là vì sao bạn chọn cách đó thay vì cách hiển nhiên hơn.
