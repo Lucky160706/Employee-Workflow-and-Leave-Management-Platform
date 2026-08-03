@@ -2,6 +2,9 @@
 
 Một hệ thống duyệt nghỉ phép nội bộ (**Leave Approval System**), xây theo đúng cách một team thật sẽ làm - nhỏ gọn, nhưng đủ chuẩn để cắm vào một hệ thống doanh nghiệp lớn hơn. Đây là project mini dành cho sinh viên → junior dev, đi kèm series 4 video giải thích tư duy đằng sau từng quyết định kỹ thuật.
 
+Tác giả: **[taovietducofficial](https://github.com/taovietducofficial)** · Mã nguồn tại
+[github.com/taovietducofficial/Minise-Leave-Approval](https://github.com/taovietducofficial/Minise-Leave-Approval)
+
 ## Bài toán
 
 - **Employee** gửi đơn xin nghỉ (ngày bắt đầu, ngày kết thúc, lý do).
@@ -381,7 +384,7 @@ là có chỗ đứng rõ ràng, không phải rải rác khắp controller.
 |---|---|
 | Portfolio xin việc fresher / junior | Mạnh. Phần lớn portfolio là CRUD không test, không Docker, không CI - cái này có đủ, và quan trọng hơn là có lý do cho từng lựa chọn |
 | Chuẩn bị phỏng vấn | Mạnh. Trả lời "vì sao không dùng Flyway" kèm mốc *khi nào thì dùng* ăn điểm hơn hẳn "em chưa học tới" |
-| Nền để xây hệ thống nội bộ thật | Được, nhưng phải làm thêm: migration, tạo user, thu hồi token, email thật, và mô hình lại chuyện role |
+| Nền để xây hệ thống nội bộ thật | Về kỹ thuật thì được, nhưng phải làm thêm: migration, tạo user, thu hồi token, email thật, và mô hình lại chuyện role. Về giấy phép thì cần xin phép trước, xem mục "Giấy phép" |
 | Deploy nguyên trạng cho công ty | Không. Riêng chuyện quản lý không xin nghỉ được đã đủ chặn |
 
 ## Hướng phát triển thêm
@@ -462,3 +465,37 @@ Giữ đúng vài quy ước có sẵn, không phải vì hình thức mà vì c
   service, trả response. Nhìn `LeaveRequestService.decide()` để thấy mẫu.
 - **Viết comment giải thích *vì sao*, không phải *cái gì*.** Code đã nói nó làm gì rồi. Cái
   người đọc sau cần biết là vì sao bạn chọn cách đó thay vì cách hiển nhiên hơn.
+
+## Tác giả
+
+Project này do **[taovietducofficial](https://github.com/taovietducofficial)** viết, kèm
+series 4 video giải thích tư duy đằng sau từng quyết định kỹ thuật.
+
+- Mã nguồn gốc: [github.com/taovietducofficial/Minise-Leave-Approval](https://github.com/taovietducofficial/Minise-Leave-Approval)
+- Báo lỗi hoặc góp ý: mở [issue](https://github.com/taovietducofficial/Minise-Leave-Approval/issues) trên repo
+
+Nếu bạn fork về để học, cứ tự nhiên. Chỉ mong bạn giữ lại dòng ghi nguồn và để lại một ngôi
+sao nếu thấy nó có ích - đó là cách duy nhất mình biết project này có đang giúp được ai không.
+
+## Giấy phép
+
+Project này phát hành theo giấy phép
+[Creative Commons Attribution-NonCommercial 4.0 International](https://creativecommons.org/licenses/by-nc/4.0/)
+(CC BY-NC 4.0). Toàn văn nằm trong file [`LICENSE`](LICENSE).
+
+Bản quyền © 2026 [taovietducofficial](https://github.com/taovietducofficial).
+
+Nói gọn bằng tiếng người:
+
+| Bạn được | Bạn phải | Bạn không được |
+|---|---|---|
+| Clone, đọc, chạy, sửa | Ghi rõ nguồn và tên tác giả | Dùng cho mục đích thương mại |
+| Học theo và dựng lại từ đầu | Nói rõ nếu bạn có sửa đổi | Bán lại code hoặc bán khoá học dựa trên nó |
+| Đăng lại bản đã sửa cho mục đích phi thương mại | Kèm link tới giấy phép | Gỡ dòng ghi nguồn ra |
+
+"Phi thương mại" ở đây hiểu theo nghĩa rộng: dùng để học, làm bài tập, đưa vào portfolio cá
+nhân, dạy miễn phí thì đều được. Còn dùng trong sản phẩm của công ty - kể cả hệ thống nội bộ
+không bán ra ngoài - thì cần xin phép riêng. Cứ mở issue hoặc liên hệ qua GitHub.
+
+Riêng phần đóng góp ngược lại repo này qua pull request thì không vướng gì cả, cứ gửi bình
+thường.
