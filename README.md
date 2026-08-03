@@ -19,6 +19,54 @@ Giống hệt việc học sinh xin nghỉ học và giáo viên chủ nhiệm d
 | 3 | Frontend & tích hợp (React) | `frontend/` | Video 3 |
 | 4 | Test, Docker, CI/CD, tích hợp doanh nghiệp mô phỏng | `backend/.../integration/`, `docker/`, `.github/` | Video 4 |
 
+## Công nghệ sử dụng
+
+Danh sách dưới đây không có gì lạ, và đó là chủ ý. Toàn bộ đều là thứ một team Java đi làm
+gặp trong tuần đầu tiên — học xong project này bạn không phải quên đi cái gì để đi làm.
+
+**Backend — Java 21, Spring Boot 3.5.16, đóng gói thành một JAR duy nhất.**
+
+| Thư viện | Có mặt để làm gì |
+|---|---|
+| `spring-boot-starter-web` | Spring MVC + Tomcat nhúng — dựng REST API |
+| `spring-boot-starter-security` | Chặn request theo quyền, băm mật khẩu bằng BCrypt |
+| `spring-boot-starter-data-jpa` | Hibernate, ánh xạ 2 bảng thành entity |
+| `spring-boot-starter-validation` | Chặn dữ liệu sai ngay ở biên bằng `@Valid`, không để lọt xuống service |
+| `spring-boot-starter-actuator` | `/actuator/health` cho load balancer và Kubernetes |
+| `jjwt` 0.12.7 | Tự ký và verify JWT |
+| `springdoc-openapi` 2.8.17 | Sinh Swagger UI từ chính code — phiên bản 2.8.x bắt buộc đi cùng Boot 3.5 |
+| H2 | Database in-memory cho dev, chạy được ngay không cần cài gì |
+| PostgreSQL 16 | Database thật khi chạy Docker, dữ liệu nằm trong volume |
+
+**Frontend — React 19 dựng bằng Vite 8.** Chỉ có ba dependency: `react`, `react-dom` và
+`react-router-dom` để điều hướng theo role sau khi đăng nhập. Lint bằng `oxlint` (viết bằng
+Rust, nhanh hơn ESLint đáng kể trên project nhỏ vì gần như không có thời gian khởi động).
+
+**Test — JUnit 5, Mockito và AssertJ**, tất cả nằm sẵn trong `spring-boot-starter-test`.
+Maven Failsafe tách integration test (`*IT`, chạy ở `verify`) khỏi unit test (chạy ở `test`).
+Có thêm Apache HttpClient 5 trong scope test vì một lý do rất cụ thể: `HttpURLConnection` của
+JDK không hỗ trợ method `PATCH`, mà endpoint duyệt đơn lại dùng đúng method đó.
+
+**Hạ tầng — Docker multi-stage** (`maven:3.9-temurin-21` để build, `temurin-21-jre-alpine`
+để chạy; image cuối chạy bằng user không phải root), **Docker Compose** ba service có
+healthcheck xếp thứ tự khởi động, **nginx** phục vụ file tĩnh và proxy `/api`, và
+**GitHub Actions** chạy hai job song song cho backend và frontend.
+
+### Những thứ cố tình không dùng
+
+Phần này đáng đọc hơn phần trên. Mỗi dòng đều có ghi chú `ponytail:` tương ứng trong code:
+
+| Không dùng | Dùng gì thay thế | Khi nào thì nên thêm vào |
+|---|---|---|
+| Flyway / Liquibase | `schema.sql` + `data.sql` | Ngay lần đổi schema đầu tiên sau khi đã deploy |
+| Keycloak / OAuth2 | Tự ký JWT | Khi có từ 2 hệ thống trở lên cần chung một nơi đăng nhập |
+| Redux / Zustand | `useState` và `useEffect` | Khi state phải chia sẻ giữa các trang không liên quan |
+| MapStruct | Viết tay 4 DTO | Khi số DTO lên hàng chục |
+| Lombok | Java `record` | Gần như không cần — `record` đã giải quyết phần lớn lý do người ta dùng Lombok |
+| Microservices | Một JAR duy nhất | Khi nhiều team làm độc lập, hoặc cần scale riêng từng phần |
+
+Khác biệt giữa "chưa biết nên không dùng" và "biết rõ nên chưa dùng" nằm ở cột cuối cùng.
+
 ## Yêu cầu môi trường
 
 | Cần gì | Phiên bản | Ghi chú |
@@ -60,7 +108,7 @@ không bị 502.
 **Chạy test:**
 ```bash
 cd backend && ./mvnw verify   # 3 unit test + 2 integration test
-cd frontend && npm run build  # frontend chưa có test tự động (xem "Giới hạn đã biết")
+cd frontend && npm run build  # frontend chưa có test tự động (xem "Tính ứng dụng thực tế")
 ```
 
 ## Sơ đồ hệ thống
@@ -262,6 +310,70 @@ EMP=$(login employee1@co.com); MGR=$(login manager@co.com); HR=$(login hr@co.com
 
 Mọi lựa chọn đơn giản hóa trong project này (VD: `schema.sql` thay vì Flyway, JWT không có refresh-token, không có màn đăng ký user) là quyết định có chủ đích ở quy mô nhỏ — không phải thiếu sót. Từng điểm được ghi chú `ponytail:` ngay trong code, kèm lý do và "nếu lớn hơn thì nâng cấp thế nào". Đọc file `docs/architecture.md` để biết chi tiết.
 
-## Giới hạn đã biết (chưa cần sửa cho mini project)
+## Tính ứng dụng thực tế
 
-`schema.sql` thay vì Flyway · JWT không refresh-token · không có đăng ký user (chỉ seed sẵn) · frontend chưa có test tự động · API list chưa phân trang · mật khẩu seed dùng chung cho demo.
+Nói thẳng: kiến thức trong project này chuyển gần như nguyên vẹn sang việc thật, còn bản
+thân phần mềm thì chưa dùng được cho một công ty thật. Khoảng cách giữa hai điều đó mới là
+phần đáng học nhất, nên phần này ghi rõ cả hai phía.
+
+### Những chỗ giống hệt code doanh nghiệp
+
+Không phải pattern dạy học rồi ra ngoài phải bỏ đi:
+
+- **Phép kiểm tra "cấp dưới trực tiếp" nằm ở service, không nằm ở `@PreAuthorize`.** Lý do
+  ở `LeaveRequestService.decide()`: annotation chỉ biết vai trò của người gọi, không biết dữ
+  liệu của đơn cụ thể. Đây là ranh giới mà không ít người đi làm vài năm vẫn đặt nhầm chỗ.
+- **`open-in-view: false`.** Spring Boot mặc định bật; tắt đi rồi tự khoanh transaction
+  trong service là việc team có kinh nghiệm nào cũng làm.
+- **Tách 401 khỏi 403.** Ảnh hưởng trực tiếp tới trải nghiệm người dùng: client biết lúc nào
+  cần đăng nhập lại, lúc nào đăng nhập lại cũng vô ích.
+- **Ép UTF-8 khi lấy bytes của JWT secret.** Không ép thì máy dev Windows và server Linux
+  sinh ra hai khoá khác nhau, token ký ở máy này không verify được ở máy kia. Loại lỗi chỉ
+  nổ trên production.
+- **Healthcheck xếp thứ tự khởi động trong Compose.** "Container đã chạy" không có nghĩa là
+  "app sẵn sàng" — bài học người ta thường học bằng cách bị 502 trên môi trường thật.
+
+### Chỗ hỏng lớn nhất: quản lý không xin nghỉ được
+
+Đây là lỗi thiết kế, không phải thiếu tính năng, và nên thử ngay để thấy: `POST /leave-requests`
+yêu cầu role `EMPLOYEE`, trong khi `manager@co.com` mang role `MANAGER`. Thêm nữa `manager_id`
+của tài khoản đó là `NULL` nên cũng không ai duyệt cho họ.
+
+Ở công ty thật, gần như mọi quản lý đều đồng thời là nhân viên của một người khác. Mô hình
+"mỗi user đúng một role" vỡ ngay tại đây. Đây là ví dụ rõ nhất cho chuyện mô hình hoá sai
+domain thì code có sạch đến mấy cũng không cứu được — và là lý do bước thiết kế ở Stage 1
+đáng giá hơn vẻ ngoài của nó.
+
+### Còn thiếu gì nữa trước khi dùng thật
+
+| Thiếu | Hậu quả cụ thể |
+|---|---|
+| Không thu hồi được token | Nhân viên nghỉ việc lúc 9h sáng vẫn thao tác được tới 5h chiều |
+| `schema.sql` thay vì migration | Lần đổi schema đầu tiên sau khi deploy là mất dữ liệu hoặc phải sửa tay |
+| Không có màn tạo user | Nhân sự mới vào phải chờ ai đó chạy `INSERT` |
+| Email chỉ mock | Người xin nghỉ không biết đơn đã được duyệt hay chưa |
+| API list chưa phân trang | HR ở công ty 300 người tải toàn bộ đơn trong một response |
+| Chưa rate limit `/auth/login` | Dò mật khẩu thoải mái |
+| Frontend chưa có test tự động | Sửa giao diện không có gì cảnh báo khi làm hỏng luồng cũ |
+| Mật khẩu seed dùng chung | Chỉ hợp lệ cho demo, không được mang lên môi trường thật |
+
+### Phần khó thật mà project cố tình bỏ qua
+
+Điều này ít người nói: **phần lớn độ khó của một hệ thống nghỉ phép thật không nằm ở luồng
+duyệt đơn.** Luồng duyệt là phần dễ. Phần khó nằm ở những thứ `docs/requirements.md` ghi là
+ngoài phạm vi — phép năm cộng dồn theo tháng, người vào giữa năm tính pro-rata, phép tồn từ
+năm cũ hết hạn vào tháng mấy, nghỉ nửa ngày, nghỉ không lương, ngày lễ theo từng quốc gia,
+trùng lịch trong đội, quản lý đi vắng thì uỷ quyền cho ai duyệt.
+
+Toàn bộ đều là luật nghiệp vụ chứ không phải vấn đề kỹ thuật, và khác nhau ở mỗi công ty.
+Project này dựng đúng bộ khung để cắm chúng vào: tầng service đã tách sạch nên thêm luật vào
+là có chỗ đứng rõ ràng, không phải rải rác khắp controller.
+
+### Tóm lại dùng được vào việc gì
+
+| Mục đích | Đánh giá |
+|---|---|
+| Portfolio xin việc fresher / junior | Mạnh. Phần lớn portfolio là CRUD không test, không Docker, không CI — cái này có đủ, và quan trọng hơn là có lý do cho từng lựa chọn |
+| Chuẩn bị phỏng vấn | Mạnh. Trả lời "vì sao không dùng Flyway" kèm mốc *khi nào thì dùng* ăn điểm hơn hẳn "em chưa học tới" |
+| Nền để xây hệ thống nội bộ thật | Được, nhưng phải làm thêm: migration, tạo user, thu hồi token, email thật, và mô hình lại chuyện role |
+| Deploy nguyên trạng cho công ty | Không. Riêng chuyện quản lý không xin nghỉ được đã đủ chặn |
