@@ -70,6 +70,23 @@ class LeaveRequestControllerIT {
         assertThat(decideResponse.getBody().status()).isEqualTo("APPROVED");
     }
 
+    /**
+     * Token rac/het han la chuyen BINH THUONG (token song 8 tieng roi het han), khong phai
+     * loi server. Truoc day JwtAuthFilter de exception cua thu vien JWT thoat ra ngoai nen
+     * Spring tra ve 500 - frontend se bao "loi he thong" thay vi day nguoi dung ve man
+     * dang nhap. Test nay khoa lai hanh vi dung: 401.
+     */
+    @Test
+    void malformedTokenIsRejectedAsUnauthorizedNotServerError() {
+        var response = rest.exchange(
+                "/api/v1/leave-requests/mine",
+                HttpMethod.GET,
+                new HttpEntity<>(authHeaders("this.is.not.a.jwt")),
+                String.class);
+
+        assertThat(response.getStatusCode()).isEqualTo(HttpStatus.UNAUTHORIZED);
+    }
+
     @Test
     void employeeCannotAccessManagerTeamEndpoint() {
         String employeeToken = loginAndGetToken("employee1@co.com", "password123");

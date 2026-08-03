@@ -7,6 +7,7 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
 import javax.crypto.SecretKey;
+import java.nio.charset.StandardCharsets;
 import java.util.Date;
 import java.util.function.Function;
 
@@ -29,7 +30,10 @@ public class JwtService {
             @Value("${app.jwt.secret}") String secret,
             @Value("${app.jwt.expiration-ms}") long expirationMs
     ) {
-        this.signingKey = Keys.hmacShaKeyFor(secret.getBytes());
+        // UTF_8 tuong minh: secret.getBytes() dung charset mac dinh cua may (Windows co
+        // the la windows-1252, Linux la UTF-8) - cung 1 JWT_SECRET se sinh ra 2 khoa khac
+        // nhau tren 2 may, token ky o may nay khong verify duoc o may kia.
+        this.signingKey = Keys.hmacShaKeyFor(secret.getBytes(StandardCharsets.UTF_8));
         this.expirationMs = expirationMs;
     }
 

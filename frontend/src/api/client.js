@@ -24,6 +24,15 @@ export async function apiFetch(path, options = {}) {
 
   const response = await fetch(path, { ...options, headers })
 
+  // 401 = token het han hoac khong hop le (backend phan biet 401 vs 403 - xem
+  // SecurityConfig). Xoa token chet va quay ve man dang nhap ngay tai day, thay vi
+  // de tung man hinh hien "loi" roi nguoi dung ket lai voi 1 token khong dung duoc.
+  // 403 KHONG xu ly nhu vay: da dang nhap dung nguoi, chi la khong du quyen.
+  if (response.status === 401 && token) {
+    setToken(null)
+    if (window.location.pathname !== '/login') window.location.assign('/login')
+  }
+
   if (!response.ok) {
     let message = `Request failed (${response.status})`
     try {

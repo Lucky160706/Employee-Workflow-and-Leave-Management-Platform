@@ -1,0 +1,13 @@
+# Build context la thu muc goc repo (xem docker-compose.yml), nen mac dinh Docker
+# se gui CA repo - ke ca videos/ (46MB) va node_modules/target da build san (127MB) -
+# sang daemon truoc moi lan build. Loai chung ra: build nhanh hon va khong co rui ro
+# artifact cu tren may lot vao image.
+.git/
+videos/
+frontend/node_modules/
+frontend/dist/
+backend/target/
+.env
+.github/
+docs/
+**/*.log

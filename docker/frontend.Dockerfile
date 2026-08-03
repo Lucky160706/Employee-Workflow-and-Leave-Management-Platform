@@ -1,5 +1,7 @@
 # Build context la thu muc goc repo (xem docker-compose.yml).
-FROM node:20-alpine AS build
+# Node 22 (khong phai 20): Node 20 het han ho tro tu 04/2026, va Vite 8 yeu cau
+# node ^20.19 || >=22.12 - pin "20" se dung vao ban Node 20 cu hon va build vo.
+FROM node:22-alpine AS build
 WORKDIR /app
 COPY frontend/package.json frontend/package-lock.json ./
 RUN npm ci

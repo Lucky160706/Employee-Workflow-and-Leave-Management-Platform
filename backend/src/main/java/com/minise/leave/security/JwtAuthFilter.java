@@ -44,16 +44,24 @@ public class JwtAuthFilter extends OncePerRequestFilter {
         }
 
         String token = header.substring("Bearer ".length());
-        String email = jwtService.extractEmail(token);
 
-        if (email != null && SecurityContextHolder.getContext().getAuthentication() == null) {
-            UserDetails userDetails = userDetailsService.loadUserByUsername(email);
-            if (jwtService.isTokenValid(token, userDetails.getUsername())) {
-                var authToken = new UsernamePasswordAuthenticationToken(
-                        userDetails, null, userDetails.getAuthorities());
-                authToken.setDetails(new WebAuthenticationDetailsSource().buildDetails(request));
-                SecurityContextHolder.getContext().setAuthentication(authToken);
+        // Token het han/sai chu ky/nguoi dung khong ton tai => KHONG nem exception ra
+        // ngoai. Neu de exception thoat khoi filter, Spring tra ve 500 Internal Server
+        // Error cho mot chuyen hoan toan binh thuong (token het han sau 8 tieng). Bo qua
+        // token hong va di tiep: SecurityContext trong => filter chain sau do tu tra 401.
+        try {
+            String email = jwtService.extractEmail(token);
+            if (email != null && SecurityContextHolder.getContext().getAuthentication() == null) {
+                UserDetails userDetails = userDetailsService.loadUserByUsername(email);
+                if (jwtService.isTokenValid(token, userDetails.getUsername())) {
+                    var authToken = new UsernamePasswordAuthenticationToken(
+                            userDetails, null, userDetails.getAuthorities());
+                    authToken.setDetails(new WebAuthenticationDetailsSource().buildDetails(request));
+                    SecurityContextHolder.getContext().setAuthentication(authToken);
+                }
             }
+        } catch (Exception ex) {
+            SecurityContextHolder.clearContext();
         }
 
         filterChain.doFilter(request, response);

@@ -26,3 +26,6 @@ backend/data/
 
 ### Playwright MCP test artifacts ###
 .playwright-mcp/
+
+### Video production (HyperFrames) - large binary/media, not part of the code deliverable ###
+videos/
